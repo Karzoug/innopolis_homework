@@ -18,7 +18,7 @@ func input(ctx context.Context) <-chan []byte {
 
 	go func() {
 		sc := bufio.NewScanner(os.Stdin)
-		sc.Split(bufio.ScanBytes)
+		sc.Split(bufio.ScanLines)
 		defer close(ch)
 		for {
 			select {
@@ -44,7 +44,30 @@ func writeToFile(ctx context.Context, ch <-chan []byte) (<-chan struct{}, error)
 
 	done := make(chan struct{})
 	go func() {
-	LOOP:
+		defer func() {
+			if err := f.Close(); err != nil {
+				log.Println(err)
+			}
+			done <- struct{}{}
+		}()
+
+		writeToFileFn := func(buf []byte, ok bool) bool {
+			if !ok {
+				return false
+			}
+			_, err := f.Write(buf)
+			if err != nil {
+				log.Println(err)
+				return false
+			}
+			_, err = f.WriteString("\n")
+			if err != nil {
+				log.Println(err)
+				return false
+			}
+			return true
+		}
+
 		for {
 			select {
 			case <-ctx.Done():
@@ -52,32 +75,18 @@ func writeToFile(ctx context.Context, ch <-chan []byte) (<-chan struct{}, error)
 				select {
 				// any data in channel buffer?
 				case buf, ok := <-ch:
-					if !ok {
-						break LOOP
-					}
-					_, err := f.Write(buf)
-					if err != nil {
-						log.Println(err)
+					if !writeToFileFn(buf, ok) {
+						return
 					}
 				default:
 				}
-				break LOOP
+				return
 			case buf, ok := <-ch:
-				if !ok {
-					break LOOP
-				}
-				_, err := f.Write(buf)
-				if err != nil {
-					log.Println(err)
-					break LOOP
+				if !writeToFileFn(buf, ok) {
+					return
 				}
 			}
 		}
-
-		if err := f.Close(); err != nil {
-			log.Println(err)
-		}
-		done <- struct{}{}
 	}()
 
 	return done, nil
