@@ -25,17 +25,17 @@ func splitPrimesAndNotPrimes(arr []int) (prime, notPrime <-chan int) {
 }
 
 func main() {
-	done := make(chan struct{}, 2)
 	primeCh, notPrimeCh := splitPrimesAndNotPrimes([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 	primeNumbers := make([]int, 0)
 	notPrimeNumbers := make([]int, 0)
+
+	done := make(chan struct{}, 2)
 	go func() {
 		for v := range primeCh {
 			primeNumbers = append(primeNumbers, v)
 		}
 		done <- struct{}{}
 	}()
-
 	go func() {
 		for v := range notPrimeCh {
 			notPrimeNumbers = append(notPrimeNumbers, v)
@@ -45,6 +45,7 @@ func main() {
 
 	<-done
 	<-done
+
 	fmt.Println(primeNumbers)
 	fmt.Println(notPrimeNumbers)
 }
