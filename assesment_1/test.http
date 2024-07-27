@@ -1,0 +1,43 @@
+POST http://localhost:8080/file-records HTTP/1.1
+content-type: application/json
+
+{
+    "token": "hDFJ!4&5MVg*bTDX",
+    "file_id": "./test/2.txt",
+    "data": "мама мыла раму"
+}
+
+###
+
+POST http://localhost:8080/file-records HTTP/1.1
+content-type: application/json
+
+{
+    "token": "hDFJ!4&5MVg*bTDX",
+    "file_id": "./test/2.txt",
+    "data": "пришел Мистер Пропер"
+}
+
+###
+
+POST http://localhost:8080/file-records HTTP/1.1
+content-type: application/json
+
+{
+    "token": "hDFJ!4&5MVg*bTDX",
+    "file_id": "./test/2.txt",
+    "data": "и начался сущий хаос"
+}
+
+###
+
+POST http://localhost:8080/file-records HTTP/1.1
+content-type: application/json
+
+{
+    "token": "78FJ!4&5MVg*bTDX",
+    "file_id": "./test/2.txt",
+    "data": "конец"
+}
+
+###
