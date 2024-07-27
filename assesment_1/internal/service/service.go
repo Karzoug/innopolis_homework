@@ -69,6 +69,8 @@ func (s *service) doScaling(ctx context.Context, wg *sync.WaitGroup) {
 	cancels := make([]context.CancelFunc, 0, s.cfg.MaxWorkerCount-s.cfg.MinWorkerCount)
 
 	t := time.NewTicker(s.cfg.WorkerInterval / 2)
+	defer t.Stop()
+
 	for {
 		select {
 		case <-ctx.Done():
