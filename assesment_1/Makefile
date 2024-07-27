@@ -1,7 +1,8 @@
 LOCAL_BIN:=$(CURDIR)/bin
 
-install-lint:
+install-dependencies:
 	GOBIN=$(LOCAL_BIN) go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.58.0
+	GOBIN=$(LOCAL_BIN) go install gotest.tools/gotestsum@v1.12.0
 
 .PHONY: lint
 lint:
@@ -13,7 +14,7 @@ install-deps:
 .PHONY: test
 test:
 	go clean -testcache
-	go test ./...
+	$(LOCAL_BIN)/gotestsum -- -race -v -cover ./...
 
 .PHONY: format
 format:
@@ -21,4 +22,4 @@ format:
 
 .PHONY: build
 build:
-	go build -o bin/filerec ./cmd/main.go
+	go build -o bin/filerec -ldflags="-s -w" ./cmd/main.go
