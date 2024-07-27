@@ -28,13 +28,13 @@ func fixConfig(cfg *Config, logger zerolog.Logger) {
 			Int("max worker count", cfg.MaxWorkerCount).
 			Msg("service config: set to default value")
 	}
-	if cfg.WorkerInterval == 0 {
+	if cfg.WorkerInterval <= 0 {
 		cfg.WorkerInterval = 1 * time.Second
 		logger.Warn().
 			Dur("worker interval", cfg.WorkerInterval).
 			Msg("service config: set to default value")
 	}
-	if cfg.MaxWaitTimeoutToWriteFile == 0 {
+	if cfg.MaxWaitTimeoutToWriteFile <= 0 {
 		cfg.MaxWaitTimeoutToWriteFile = 10 * time.Second
 		logger.Warn().
 			Dur("max wait timeout to write file", cfg.MaxWaitTimeoutToWriteFile).
