@@ -64,13 +64,13 @@ func (n *node[T]) Remove(x T) *node[T] {
 	}
 
 	if minNode != nil {
-		var z T
+		var z *T
 		if x == item.keys[0] {
-			z = item.keys[0]
+			z = &item.keys[0]
 		} else {
-			z = item.keys[1]
+			z = &item.keys[1]
 		}
-		z, minNode.keys[0] = minNode.keys[0], z
+		*z, minNode.keys[0] = minNode.keys[0], *z
 		item = minNode
 	}
 
