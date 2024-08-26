@@ -190,11 +190,11 @@ func (n *node[T]) searchMin() *node[T] {
 	if n == nil {
 		return n
 	}
-	if !(n.sons[0] == nil) {
-		return n.searchMin()
-	} else {
-		return n.sons[0].searchMin()
-	}
+	if n.sons[0] == nil {
+		return n
+	} 
+	
+	return n.sons[0].searchMin()
 }
 
 func (n *node[T]) removeFromNode(x T) {
